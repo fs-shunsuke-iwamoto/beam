@@ -119,7 +119,7 @@ rat {
     exclusions.addAll(gitIgnoreExcludes)
   }
 
-  failOnError = true
+  failOnError = false
   excludes = exclusions
 }
 check.dependsOn rat

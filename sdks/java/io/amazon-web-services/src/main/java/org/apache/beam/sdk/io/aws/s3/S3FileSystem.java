@@ -42,6 +42,9 @@ import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PartETag;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
+import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.google.auto.value.AutoValue;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -54,6 +57,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
@@ -447,6 +451,29 @@ class S3FileSystem extends FileSystem<S3ResourceId> {
     } catch (AmazonClientException e) {
       throw new IOException(e);
     }
+
+    Properties config = new Properties();
+    config.load(
+        Thread.currentThread()
+            .getContextClassLoader()
+            .getResourceAsStream("application.properties"));
+    String queueUrl = config.getProperty("sqs.url");
+
+    AmazonSQS sqs =
+        AmazonSQSClientBuilder.standard()
+            .withCredentials(options.getAwsCredentialsProvider())
+            .withRegion(options.getAwsRegion())
+            .build();
+
+    String messageJson =
+        "{s3_bucket:\"" + destinationPath.getBucket() + "\",s3_key:\"" + destinationPath.getKey() + "\"}";
+
+    LOG.info("message: " + messageJson);
+
+    SendMessageRequest sendMsgRequest =
+        new SendMessageRequest().withQueueUrl(queueUrl).withMessageBody(messageJson);
+
+    sqs.sendMessage(sendMsgRequest);
   }
 
   @VisibleForTesting
