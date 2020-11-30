@@ -466,7 +466,11 @@ class S3FileSystem extends FileSystem<S3ResourceId> {
             .build();
 
     String messageJson =
-        "{s3_bucket:\"" + destinationPath.getBucket() + "\",s3_key:\"" + destinationPath.getKey() + "\"}";
+        "{\"s3_bucket\":\""
+            + destinationPath.getBucket()
+            + "\",\"s3_key\":\""
+            + destinationPath.getKey()
+            + "\"}";
 
     LOG.info("message: " + messageJson);
 
