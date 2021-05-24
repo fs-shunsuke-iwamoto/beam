@@ -13,9 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v1
+package v2
 
 //go:generate protoc -I . v1.proto --go_out=../../../../../../../../../../
 
 // PubSubPayloadURN is the URN of the pubsub proto payload.
-const PubSubPayloadURN = "beam:go:payload:pubsub:v1"
+const PubSubPayloadURN = "beam:go:payload:pubsub:v2"

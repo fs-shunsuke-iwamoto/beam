@@ -32,7 +32,7 @@ import (
 	"github.com/apache/beam/sdks/go/pkg/beam/core/util/reflectx"
 	"github.com/apache/beam/sdks/go/pkg/beam/core/util/stringx"
 	"github.com/apache/beam/sdks/go/pkg/beam/internal/errors"
-	pubsub_v1 "github.com/apache/beam/sdks/go/pkg/beam/io/pubsubio/v1"
+	pubsub_v1 "github.com/apache/beam/sdks/go/pkg/beam/io/pubsubio/v2"
 	pipepb "github.com/apache/beam/sdks/go/pkg/beam/model/pipeline_v1"
 	"github.com/golang/protobuf/proto"
 	df "google.golang.org/api/dataflow/v1b3"

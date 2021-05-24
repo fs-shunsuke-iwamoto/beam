@@ -22,9 +22,9 @@
 // versions:
 // 	protoc-gen-go v1.25.0-devel
 // 	protoc        v3.13.0
-// source: v1.proto
+// source: v2.proto
 
-package v1
+package v2
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -94,7 +94,7 @@ type PubSubPayload struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Op                 PubSubPayload_Op `protobuf:"varint,1,opt,name=op,proto3,enum=org.apache.beam.sdks.go.pkg.beam.io.pubsubio.v1.PubSubPayload_Op" json:"op,omitempty"`
+	Op                 PubSubPayload_Op `protobuf:"varint,1,opt,name=op,proto3,enum=org.apache.beam.sdks.go.pkg.beam.io.pubsubio.v2.PubSubPayload_Op" json:"op,omitempty"`
 	Topic              string           `protobuf:"bytes,2,opt,name=Topic,proto3" json:"Topic,omitempty"`
 	Subscription       string           `protobuf:"bytes,3,opt,name=Subscription,proto3" json:"Subscription,omitempty"`
 	IdAttribute        string           `protobuf:"bytes,4,opt,name=IdAttribute,proto3" json:"IdAttribute,omitempty"`

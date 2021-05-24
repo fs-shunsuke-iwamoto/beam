@@ -24,7 +24,7 @@ import (
 	"github.com/apache/beam/sdks/go/pkg/beam/core/typex"
 	"github.com/apache/beam/sdks/go/pkg/beam/core/util/protox"
 	"github.com/apache/beam/sdks/go/pkg/beam/core/util/reflectx"
-	"github.com/apache/beam/sdks/go/pkg/beam/io/pubsubio/v1"
+	v2 "github.com/apache/beam/sdks/go/pkg/beam/io/pubsubio/v2"
 	"github.com/apache/beam/sdks/go/pkg/beam/util/pubsubx"
 	"github.com/golang/protobuf/proto"
 	pb "google.golang.org/genproto/googleapis/pubsub/v1"
@@ -49,8 +49,8 @@ type ReadOptions struct {
 func Read(s beam.Scope, project, topic string, opts *ReadOptions) beam.PCollection {
 	s = s.Scope("pubsubio.Read")
 
-	payload := &v1.PubSubPayload{
-		Op:    v1.PubSubPayload_READ,
+	payload := &v2.PubSubPayload{
+		Op:    v2.PubSubPayload_READ,
 		Topic: pubsubx.MakeQualifiedTopicName(project, topic),
 	}
 	if opts != nil {
@@ -62,7 +62,7 @@ func Read(s beam.Scope, project, topic string, opts *ReadOptions) beam.PCollecti
 		payload.WithAttributes = opts.WithAttributes
 	}
 
-	out := beam.External(s, v1.PubSubPayloadURN, protox.MustEncode(payload), nil, []beam.FullType{typex.New(reflectx.ByteSlice)}, false)
+	out := beam.External(s, v2.PubSubPayloadURN, protox.MustEncode(payload), nil, []beam.FullType{typex.New(reflectx.ByteSlice)}, false)
 	if opts.WithAttributes {
 		return beam.ParDo(s, unmarshalMessageFn, out[0])
 	}
@@ -81,8 +81,8 @@ func unmarshalMessageFn(raw []byte) (*pb.PubsubMessage, error) {
 func Write(s beam.Scope, project, topic string, col beam.PCollection) {
 	s = s.Scope("pubsubio.Write")
 
-	payload := &v1.PubSubPayload{
-		Op:    v1.PubSubPayload_WRITE,
+	payload := &v2.PubSubPayload{
+		Op:    v2.PubSubPayload_WRITE,
 		Topic: pubsubx.MakeQualifiedTopicName(project, topic),
 	}
 
@@ -91,5 +91,5 @@ func Write(s beam.Scope, project, topic string, col beam.PCollection) {
 		out = beam.ParDo(s, proto.Marshal, col)
 		payload.WithAttributes = true
 	}
-	beam.External(s, v1.PubSubPayloadURN, protox.MustEncode(payload), []beam.PCollection{out}, nil, false)
+	beam.External(s, v2.PubSubPayloadURN, protox.MustEncode(payload), []beam.PCollection{out}, nil, false)
 }
